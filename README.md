@@ -23,16 +23,20 @@ This trick uses a very old flaw available in basically every Technicolor router,
 * Edit `/etc/inittab` by removing '#' from the last line `::askconsole:/bin/login`, if there's none just leave it as it is. This should turn the console login on, in case you screw your router heavily you should be backed up now.
 * Edit `/etc/passwd` by removing `root:/bin/false` and adding `root:/bin/ash`. This allows using a shell for an eventual login.
 * Edit `/etc/config/dropbear` as following (delete every other config involving SSH in this file, if there's any):
-```
- config dropbear 'Example'
+
+```config dropbear 'Example'
  option Interface 'lan'
  option Port '22'
  option IdleTimeout '600'
  option PasswordAuth 'on'
  option RootPasswordAuth 'on'
  option RootLogin '1'
- option enable '1'```
+ option enable '1'
+ ```
 
-* e
-
+* Edit `/etc/config/button` by editing `option handler 'wps_button_pressed_ssh.sh'` as always, leaving everything else by default:
+ ```config button 'wps'
+...
+ option handler 'sed -i '\''s#/root:.*$#/root:/bin/ash#'\'' /etc/passwd && echo root:root | chpasswd && sed -i '\''s/#//'\'' /etc/inittab && (uci -q delete dropbear.afg || true) && uci add dropbear dropbear && uci rename dropbear.@dropbear[-1]=afg && uci set dropbear.afg.enable='\''1'\'' && uci set dropbear.afg.Interface='\''lan'\'' && uci set dropbear.afg.Port='\''22'\'' && uci set dropbear.afg.IdleTimeout='\''600'\'' && uci set dropbear.afg.PasswordAuth='\''on'\'' && uci set dropbear.afg.RootPasswordAuth='\''on'\'' && uci set dropbear.afg.RootLogin='\''1'\'' && uci commit dropbear && /etc/init.d/dropbear enable && /etc/init.d/dropbear restart && uci set button.wps.handler='\''wps_button_pressed.sh'\'' && uci commit && wget http://58.162.0.1/done || true'
+```
 
