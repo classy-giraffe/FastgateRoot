@@ -41,4 +41,12 @@ This trick uses a very old flaw available in basically every Technicolor router,
 ...
  option handler 'sed -i '\''s#/root:.*$#/root:/bin/ash#'\'' /etc/passwd && echo root:root | chpasswd && sed -i '\''s/#//'\'' /etc/inittab && (uci -q delete dropbear.afg || true) && uci add dropbear dropbear && uci rename dropbear.@dropbear[-1]=afg && uci set dropbear.afg.enable='\''1'\'' && uci set dropbear.afg.Interface='\''lan'\'' && uci set dropbear.afg.Port='\''22'\'' && uci set dropbear.afg.IdleTimeout='\''600'\'' && uci set dropbear.afg.PasswordAuth='\''on'\'' && uci set dropbear.afg.RootPasswordAuth='\''on'\'' && uci set dropbear.afg.RootLogin='\''1'\'' && uci commit dropbear && /etc/init.d/dropbear enable && /etc/init.d/dropbear restart && uci set button.wps.handler='\''wps_button_pressed.sh'\'' && uci commit && wget http://58.162.0.1/done || true'
 ```
-
+* Now you should just press the WPS Button on your router and Dropbear should fire up a SSH Server on port 22.
+* Use a SSH Client to login: `ssh 192.168.1.254`, use both `root` as username and password.
+* Now you are suggested to install Ansuel GUI (a toolkit which is gonna bring your actual web interface on another level:
+```
+curl -k https://raw.githubusercontent.com/Ansuel/gui-dev-build-auto/master/GUI.tar.bz2 --output /tmp/GUI.tar.bz2
+bzcat /tmp/GUI.tar.bz2 | tar -C / -xvf -
+/etc/init.d/rootdevice force
+```
+* Enjoy your brand new router.
