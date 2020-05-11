@@ -22,14 +22,15 @@ This trick uses a very old flaw available in basically every Technicolor router,
 * Now you should be able to access the FS of your router, there are still a few things to do though.
 * Edit `/etc/inittab` by removing '#' from the last line `::askconsole:/bin/login`, if there's none just leave it as it is. This should turn the console login on, in case you screw your router heavily you should be backed up now.
 * Edit `/etc/passwd` by removing `root:/bin/false` and adding `root:/bin/ash`. This allows using a shell for an eventual login.
-* Edit `/etc/config/dropbear` as following:
-```config dropbear 'esempio'
+* Edit `/etc/config/dropbear` as following (delete every other config involving SSH in this file, if there's any):
+`config dropbear 'Example'
  option Interface 'lan'
  option Port '22'
  option IdleTimeout '600'
  option PasswordAuth 'on'
  option RootPasswordAuth 'on'
  option RootLogin '1'
- option enable '1'```
+ option enable '1'`
+*
 
 
